@@ -174,18 +174,32 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        cubeShader.use();
+
         vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+
+        glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // 降低影响
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
+
 
         vec3 objectColor = vec3(1.0f, 0.5f, 0.31f);
-        cubeShader.setVec3("objectColor", objectColor);
+        cubeShader.use();
+
         cubeShader.setVec3("lightColor", lightColor);
         cubeShader.setVec3("lightPos", lightPos);
         cubeShader.setVec3("viewPos", cameraPos);
 
-        float radius = 10.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
+        cubeShader.setVec3("light.ambient",  ambientColor);
+        cubeShader.setVec3("light.diffuse",  diffuseColor); // 将光照调暗了一些以搭配场景
+        cubeShader.setVec3("light.specular", vec3(1.0f));
+
+        cubeShader.setVec3("material.ambient",  objectColor);
+        cubeShader.setVec3("material.diffuse",  objectColor);
+        cubeShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        cubeShader.setFloat("material.shininess", 32.0f);
+
         glm::mat4 view= glm::mat4(1.0f);
         view = camera.getViewMatrix();
         cubeShader.setMat4("view", view);
