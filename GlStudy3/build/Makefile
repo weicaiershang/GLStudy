@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DSTB_IMAGE_IMPLEMENTATION -DQT_QML_DEBUG -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../GlStudy2 -I. -I../inc -I../../../../Qt5.11.0/5.11.0/gcc_64/include -I../../../../Qt5.11.0/5.11.0/gcc_64/include/QtCore -I. -I../../../../Qt5.11.0/5.11.0/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../../GlStudy3 -I. -I../inc -I../../../../Qt5.11.0/5.11.0/gcc_64/include -I../../../../Qt5.11.0/5.11.0/gcc_64/include/QtCore -I. -I../../../../Qt5.11.0/5.11.0/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/mengxiaoyao/Qt5.11.0/5.11.0/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -35,7 +35,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = GlStudy1.0.0
-DISTDIR = /home/mengxiaoyao/Documents/GLStudy/GlStudy2/build/.tmp/GlStudy1.0.0
+DISTDIR = /home/mengxiaoyao/Documents/GLStudy/GlStudy3/build/.tmp/GlStudy1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/mengxiaoyao/Qt5.11.0/5.11.0/gcc_64/lib
 LIBS          = $(SUBLIBS) -lglfw3 -lGL -lX11 -ldl -L/home/mengxiaoyao/Qt5.11.0/5.11.0/gcc_64/lib -lQt5Core -lpthread 
@@ -53,11 +53,13 @@ OBJECTS_DIR   = ./
 SOURCES       = ../src/main.cpp \
 		../src/glad.c \
 		../src/shader.cpp \
-		../src/camera.cpp 
+		../src/camera.cpp \
+		../src/mesh.cpp 
 OBJECTS       = main.o \
 		glad.o \
 		shader.o \
-		camera.o
+		camera.o \
+		mesh.o
 DIST          = /home/Qt5.11.0/5.11.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/Qt5.11.0/5.11.0/gcc_64/mkspecs/common/unix.conf \
 		/home/Qt5.11.0/5.11.0/gcc_64/mkspecs/common/linux.conf \
@@ -224,10 +226,12 @@ DIST          = /home/Qt5.11.0/5.11.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/Qt5.11.0/5.11.0/gcc_64/mkspecs/features/lex.prf \
 		../../GlStudy.pro ../inc/shader.h \
 		../inc/stb_image.h \
-		../inc/camera.h ../src/main.cpp \
+		../inc/camera.h \
+		../inc/mesh.h ../src/main.cpp \
 		../src/glad.c \
 		../src/shader.cpp \
-		../src/camera.cpp
+		../src/camera.cpp \
+		../src/mesh.cpp
 QMAKE_TARGET  = GlStudy
 DESTDIR       = ../bin/
 TARGET        = ../bin/GlStudy
@@ -588,8 +592,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt5.11.0/5.11.0/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../inc/shader.h ../inc/stb_image.h ../inc/camera.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../src/main.cpp ../src/glad.c ../src/shader.cpp ../src/camera.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../inc/shader.h ../inc/stb_image.h ../inc/camera.h ../inc/mesh.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../src/main.cpp ../src/glad.c ../src/shader.cpp ../src/camera.cpp ../src/mesh.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -1210,6 +1214,9 @@ camera.o: ../src/camera.cpp ../inc/camera.h \
 		../inc/glm/ext/matrix_transform.hpp \
 		../inc/glm/gtc/matrix_transform.inl
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o camera.o ../src/camera.cpp
+
+mesh.o: ../src/mesh.cpp ../inc/mesh.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mesh.o ../src/mesh.cpp
 
 ####### Install
 
