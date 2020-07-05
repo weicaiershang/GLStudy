@@ -2,22 +2,46 @@
 
 Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
 {
-
+    m_vertices = vertices;
+    m_indices = indices;
+    m_textures = textures;
+    setupMesh();
 }
 
-void Mesh::Draw(Shader shader)
+void Mesh::draw(Shader shader)
 {
+    unsigned int diffuseNr = 1;
+    unsigned int specularNr = 1;
+    for(unsigned int i = 0; i < m_textures.size(); i++)
+    {
+        glActiveTexture(GL_TEXTURE0 + i); // 在绑定之前激活相应的纹理单元
+        // 获取纹理序号（diffuse_textureN 中的 N）
+        string number;
+        string name = m_textures[i].type;
+        if(name == "texture_diffuse")
+            number = std::to_string(diffuseNr++);
+        else if(name == "texture_specular")
+            number = std::to_string(specularNr++);
 
+        shader.setFloat(("material." + name + number).c_str(), i);
+        glBindTexture(GL_TEXTURE_2D, m_textures[i].id);
+    }
+    glActiveTexture(GL_TEXTURE0);
+
+    // 绘制网格
+    glBindVertexArray(m_VAO);
+    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 
-vector<Vertex> Mesh::vertex()
+vector<Vertex> Mesh::vertices()
 {
     return m_vertices;
 }
 
-void Mesh::setVertex(vector<Vertex> vertex)
+void Mesh::setVertices(vector<Vertex> vertices)
 {
-    m_vertices = vertex;
+    m_vertices = vertices;
 }
 
 vector<unsigned int> Mesh::indices()

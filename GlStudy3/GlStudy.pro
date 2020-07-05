@@ -13,20 +13,21 @@ INCLUDEPATH += ./inc
 
 DEFINES += STB_IMAGE_IMPLEMENTATION
 
-SOURCES += \
-        ./src/main.cpp\
-        ./src/glad.c\
-        ./src/shader.cpp \
-        ./src/camera.cpp \
-        ./src/mesh.cpp
-
-LIBS +=  -lglfw3 -lGL -lX11 -ldl
-
 
 HEADERS += \
     inc/shader.h\
     inc/stb_image.h\
     inc/camera.h \
-    inc/mesh.h
+    inc/mesh.h \
+    inc/model.h
+
+SOURCES += ./src/glad.c\
+        ./src/shader.cpp \
+        ./src/camera.cpp \
+        ./src/mesh.cpp \
+        ./src/model.cpp\
+        ./src/main.cpp\
+
+LIBS +=  -lglfw3 -lassimp -lGL -lX11 -ldl
 
 DESTDIR += ../bin

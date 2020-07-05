@@ -5,10 +5,10 @@
 #include <iostream>
 #include <glm/glm.hpp>
 
-
-#include "stb_image.h"
+#include <stb_image.h>
 #include "shader.h"
 #include "camera.h"
+#include "model.h"
 
 using namespace glm;
 
