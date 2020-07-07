@@ -1,5 +1,6 @@
 #include "model.h"
 
+
 Model::Model(char *path)
 {
     loadModel(path);
@@ -28,16 +29,17 @@ void Model::loadModel(string path)
 void Model::processNode(aiNode *node, const aiScene *scene)
 {
     // 处理节点所有的网格（如果有的话）
-       for(unsigned int i = 0; i < node->mNumMeshes; i++)
-       {
-           aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-           m_meshes.push_back(processMesh(mesh, scene));
-       }
-       // 接下来对它的子节点重复这一过程
-       for(unsigned int i = 0; i < node->mNumChildren; i++)
-       {
-           processNode(node->mChildren[i], scene);
-       }
+    for(unsigned int i = 0; i < node->mNumMeshes; i++)
+    {
+        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+        m_meshes.push_back(processMesh(mesh, scene));
+    }
+    // 接下来对它的子节点重复这一过程
+    for(unsigned int i = 0; i < node->mNumChildren; i++)
+    {
+        processNode(node->mChildren[i], scene);
+    }
+
 }
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
@@ -67,9 +69,22 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
             vec.x = mesh->mTextureCoords[0][i].x;
             vec.y = mesh->mTextureCoords[0][i].y;
             vertex.TexCoords = vec;
-        }
-        else
+        }else
         vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+
+        // tangent
+//        vector.x = mesh->mTangents[i].x;
+//        vector.y = mesh->mTangents[i].y;
+//        vector.z = mesh->mTangents[i].z;
+
+//        cout<<"ok!"<<endl;
+//        vertex.Tangent = vector;
+
+//        // bitangent
+//        vector.x = mesh->mBitangents[i].x;
+//        vector.y = mesh->mBitangents[i].y;
+//        vector.z = mesh->mBitangents[i].z;
+//        vertex.Bitangent = vector;
 
         vertices.push_back(vertex);
     }
@@ -80,17 +95,22 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         for(unsigned int j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
+
+
     // 处理材质
-    if(mesh->mMaterialIndex >= 0)
-    {
-        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-        vector<Texture> diffuseMaps = loadMaterialTextures(material,
-                                            aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        vector<Texture> specularMaps = loadMaterialTextures(material,
-                                            aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    }
+    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+    // 1. diffuse maps
+    vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    // 2. specular maps
+    vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    // 3. normal maps
+    std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    // 4. height maps
+    std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     return Mesh(vertices, indices, textures);
 }
@@ -124,6 +144,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
     }
     return textures;
 }
+
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)
 {
@@ -164,3 +185,5 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 
     return textureID;
 }
+
+

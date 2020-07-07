@@ -11,12 +11,10 @@ CONFIG -= app_bundle
 
 INCLUDEPATH += ./inc
 
-DEFINES += STB_IMAGE_IMPLEMENTATION
-
+DEFINES += STB_IMAGE_IMPLEMENTATION STB_IMAGE_STATIC
 
 HEADERS += \
     inc/shader.h\
-    inc/stb_image.h\
     inc/camera.h \
     inc/mesh.h \
     inc/model.h
@@ -28,6 +26,7 @@ SOURCES += ./src/glad.c\
         ./src/model.cpp\
         ./src/main.cpp\
 
-LIBS +=  -lglfw3 -lassimp -lGL -lX11 -ldl
+LIBS += -lglfw3 -lassimp -lGL -lX11 -ldl
+LIBS += -L/usr/local/lib -lassimp
 
 DESTDIR += ../bin

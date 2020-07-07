@@ -2,8 +2,6 @@
 #define MODEL_H
 
 
-#include <stb_image.h>
-
 #include <glad/glad.h>
 
 #include <glm/glm.hpp>
@@ -22,6 +20,7 @@
 
 #include "shader.h"
 #include "mesh.h"
+#include "stb_image.h"
 
 using namespace std;
 
@@ -47,5 +46,6 @@ private:
     vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
                                          string typeName);
 };
+
 
 #endif // MODEL_H

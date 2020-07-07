@@ -12,6 +12,7 @@ void Mesh::draw(Shader shader)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
+
     for(unsigned int i = 0; i < m_textures.size(); i++)
     {
         glActiveTexture(GL_TEXTURE0 + i); // 在绑定之前激活相应的纹理单元
